@@ -214,6 +214,7 @@ static NSHashTable *allAnimatedImagesWeak;
         id unclampedDelayTimeKey = nil;
         id delayTimeKey = nil;
 
+        BOOL isPNGData = false;
         CFStringRef imageSourceContainerType = CGImageSourceGetType(_imageSource);
         BOOL isGIFData = UTTypeConformsTo(imageSourceContainerType, kUTTypeGIF);
         if (isGIFData) {
@@ -222,7 +223,7 @@ static NSHashTable *allAnimatedImagesWeak;
             unclampedDelayTimeKey = (id)kCGImagePropertyGIFUnclampedDelayTime;
             delayTimeKey = (id)kCGImagePropertyGIFDelayTime;
         } else {
-            BOOL isPNGData = UTTypeConformsTo(imageSourceContainerType, kUTTypePNG);
+            isPNGData = UTTypeConformsTo(imageSourceContainerType, kUTTypePNG);
             if (isPNGData) {
                 size_t imageCount = CGImageSourceGetCount(_imageSource);
                 if (imageCount > 1) { // apng
@@ -264,7 +265,7 @@ static NSHashTable *allAnimatedImagesWeak;
                     // Check for valid `frameImage` before parsing its properties as frames can be corrupted (and `frameImage` even `nil` when `frameImageRef` was valid).
                     if (frameImage) {
                         // Set poster image
-                        if (!self.posterImage) {
+                        if (((isPNGData && (i > 0)) || !isPNGData) && (!self.posterImage)) {
                             _posterImage = frameImage;
                             // Set its size to proxy our size.
                             _size = _posterImage.size;
