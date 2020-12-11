@@ -6,8 +6,13 @@
 //  Copyright (c) 2013-2015 Flipboard. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <TargetConditionals.h>
 
+#if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
+#endif
+// #import <UIKit/UIKit.h>
 
 @class FLAnimatedImage;
 @protocol FLAnimatedImageViewDebugDelegate;
